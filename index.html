@@ -292,15 +292,15 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </div>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div class="actions">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <button class="btn" onclick="enviarWhatsApp()">📲 Enviar respostas pelo WhatsApp</button><br>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <button type="button" class="btn" onclick="enviarWhatsApp()"></button><br>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <button class="btn secondary" onclick="copiar()">📋 Copiar respostas</button>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <p>Ao clicar, suas respostas serão organizadas para envio. Qualquer dúvida, é só chamar a gente!</p>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </div>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <div class="brand-foot">ARKA COMUNICAÇÃO × MULTICLEAN 360</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     [
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="hidden" id="access_key" value="ed04705e-3e89-4fdd-bcfe-2438376c2eb4"><input>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <script>
 
 function coletar() {
@@ -400,27 +400,78 @@ async function enviarWhatsApp() {
 
   const dados = coletar();
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylNb8oGhchIi5kJsx6a4S-4bzkYxBNIXHmsWXfKxinAdugvmoCYAYh1Fj9YKuxOah9/exec";
+  const payload = {
+    access_key: "ed04705e-3e89-4fdd-bcfe-2438376c2eb4",
 
-  const form = document.createElement("form");
+    subject: "Novo Briefing - MultiClean 360",
 
-  form.method = "POST";
-  form.action = SCRIPT_URL;
-  form.target = "_blank";
+    data: dados.data,
+    surgiu: dados.surgiu,
+    diferencial: dados.diferencial,
+    imagemEmpresa: dados.imagemEmpresa,
+    clientes: dados.clientes,
+    perfilCliente: dados.perfilCliente,
+    medos: dados.medos,
+    lucro: dados.lucro,
+    servicoPoucoConhecido: dados.servicoPoucoConhecido,
+    epoca: dados.epoca,
+    videos: dados.videos,
+    midias: dados.midias,
+    redes: dados.redes,
+    sucesso: dados.sucesso,
+    promocao: dados.promocao,
+    comentarios: dados.comentarios
+  };
 
-  const input = document.createElement("input");
+  try {
 
-  input.type = "hidden";
-  input.name = "dados";
-  input.value = JSON.stringify(dados);
+    const response = await fetch(
+      "https://api.web3forms.com/submit",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
 
-  form.appendChild(input);
+    const result = await response.json();
 
-  document.body.appendChild(form);
+    if (result.success) {
 
-  form.submit();
+      alert("✅ Briefing enviado com sucesso!");
 
-  alert("Formulário enviado!");
+      document
+        .querySelectorAll("textarea")
+        .forEach(t => t.value = "");
+
+    } else {
+
+      console.error(result);
+
+      alert("❌ Erro ao enviar.");
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("❌ Erro de conexão.");
+
+  }
+
+}
+
+function copiar() {
+
+  const texto = gerarTextoWhatsApp(coletar());
+
+  navigator.clipboard.writeText(texto);
+
+  alert("📋 Respostas copiadas!");
 
 }
 </script>
