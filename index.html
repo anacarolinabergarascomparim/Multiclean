@@ -324,7 +324,7 @@
 <script>
   async function enviarFormulario() {
   const dados = {
-    access_key: "ed04705e-3e89-4fdd-bcfe-2438376c2eb4",
+    access_key: "c602a122-a03d-4b62-9528-471697349ae0",
     subject: "Novo Briefing MultiClean 360",
     from_name: "Formulário Briefing",
     message: coletar()
@@ -342,15 +342,17 @@
 
     const resultado = await resposta.json();
 
+    console.log(resultado);
+
     if (resultado.success) {
       alert("✅ Formulário enviado com sucesso!");
     } else {
-      alert("❌ Erro ao enviar formulário.");
-      console.log(resultado);
+      alert("❌ Erro: " + resultado.message);
     }
+
   } catch (erro) {
     console.error(erro);
-    alert("❌ Falha na conexão ao enviar.");
+    alert("❌ Falha: " + erro.message);
   }
 }
   function coletar() {
